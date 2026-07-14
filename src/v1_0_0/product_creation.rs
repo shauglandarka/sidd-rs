@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use std::collections::HashMap;
 
-// SIDD Vol. 1, Table 4-12, pg. 34
+// SIDD Vol. 1 version 1.0, pg. 34
 #[derive(Debug, Deserialize, PartialEq, Clone)]
 #[serde(rename = "ProductCreationType")]
 pub struct ProductCreation {
@@ -14,7 +14,7 @@ pub struct ProductCreation {
     #[serde(rename = "ProductClass")]
     pub product_class: String,
     #[serde(rename = "ProductType")]
-    pub product_type: String,
+    pub product_type: Option<String>,
     // Vec handles the Optional <ProductCreationExtension> tags
     #[serde(rename = "ProductCreationExtension")]
     pub extensions: Vec<ProductCreationExtension>,

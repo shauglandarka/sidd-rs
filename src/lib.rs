@@ -1,4 +1,5 @@
 #![allow(unused_imports)]
+#![allow(non_camel_case_types)]
 
 use memmap2::Mmap;
 use ndarray::{azip, par_azip, Array2, ArrayView2};
@@ -16,4 +17,4 @@ use thiserror::Error;
 
 use nitf_rs::{Nitf, NitfError};
 
-pub mod v2_0_0;
+pub mod v1_0_0;

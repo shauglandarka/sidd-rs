@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-// SIDD Vol. 1, Table 4-15, pg. 44
+// SIDD Vol. 1 version 1.0, pg. 52 
 #[derive(Debug, Deserialize, PartialEq, Clone)]
 #[serde(rename = "MeasurementType")]
 pub struct Measurement {

@@ -3,7 +3,7 @@ name = "sidd-rs"
 version = "0.2.2"
 edition = "2024"
 license = "MIT OR Apache-2.0"
-description = "Crate to interact with SICD files."
+description = "Crate to interact with SIDD files."
 readme = "README.md"
 
 [dependencies]

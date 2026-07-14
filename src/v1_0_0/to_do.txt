@@ -4,7 +4,6 @@
  'ErrorStatistics',
  'ExploitationFeatures',
  'GeographicAndTarget',
- 'Measurement',
  'NITF',
  'ProductProcessing',
  'Radiometric',
