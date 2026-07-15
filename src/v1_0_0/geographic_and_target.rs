@@ -67,7 +67,7 @@ mod tests {
              </GeographicCoverage></GeographicAndTargetType>"#;
                          
         match from_str::<GeographicAndTarget>(&xml_str) {
-            Ok(display) => {
+            Ok(_) => {
                 println!("Successfully Deserialized!");
             },
             Err(e) => panic!("Deserialization FAILED: {:#?}", e),

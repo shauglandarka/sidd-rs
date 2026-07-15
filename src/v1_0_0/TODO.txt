@@ -1,0 +1,6 @@
+'Annotations', # empty in my example
+'DownstreamReprocessing', # empty in my example
+'ErrorStatistics', # empty in my example
+'NITF', # emtpy in my example
+'Radiometric', #empty in my example
+'_NITF', #empty in my example

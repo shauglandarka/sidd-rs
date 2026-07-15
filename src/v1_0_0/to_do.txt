@@ -1,8 +1,0 @@
-['Annotations', # empty in my example
- 'DownstreamReprocessing', # empty in my example
- 'ErrorStatistics', # empty in my example
- 'NITF', # emtpy in my example
- 'ProductProcessing',
- 'Radiometric',
- '_NITF',
-]

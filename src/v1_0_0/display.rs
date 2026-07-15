@@ -35,7 +35,7 @@ pub struct MagnificationMethod {
 }
 
 #[derive(Debug, Deserialize, PartialEq, Clone)]
-enum MagnificationMethodEnum {
+pub enum MagnificationMethodEnum {
     NEAREST_NEIGHBOR,
     BILINEAR,
     LAGRANGE,
@@ -71,7 +71,7 @@ mod tests {
             </ProductDisplayType>"#;
                 
         match from_str::<Display>(&xml_str) {
-            Ok(display) => {
+            Ok(_) => {
                 println!("Successfully Deserialized!");
             },
             Err(e) => panic!("Deserialization FAILED: {:#?}", e),

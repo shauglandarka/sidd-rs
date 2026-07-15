@@ -483,6 +483,7 @@ dependencies = [
  "nitf-rs",
  "num-complex",
  "quick-xml",
+ "rayon",
  "serde",
  "thiserror",
  "zerocopy",

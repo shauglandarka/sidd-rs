@@ -1,4 +1,5 @@
 use serde::Deserialize;
+use super::{Vector3, ArpPoly, PolyDim, TimeCoaPoly, Coef, RowCol, Ecef};
 
 // SIDD Vol. 1 version 1.0, pg. 52 
 #[derive(Debug, Deserialize, PartialEq, Clone)]
@@ -35,79 +36,12 @@ pub struct ReferencePoint {
 }
 
 #[derive(Debug, Deserialize, PartialEq, Clone)]
-pub struct RowCol {
-    #[serde(rename = "Row")]
-    pub row: f64,
-    #[serde(rename = "Col")]
-    pub col: f64,
-}
-
-#[derive(Debug, Deserialize, PartialEq, Clone)]
-pub struct Ecef {
-    #[serde(rename = "X")]
-    pub x: f64,
-    #[serde(rename = "Y")]
-    pub y: f64,
-    #[serde(rename = "Z")]
-    pub z: f64,
-}
-
-#[derive(Debug, Deserialize, PartialEq, Clone)]
-pub struct TimeCoaPoly {
-    #[serde(rename = "@order1")]
-    pub order1: String,
-    #[serde(rename = "@order2")]
-    pub order2: String,
-    #[serde(rename = "Coef")]
-    pub coef: Coef,
-}
-
-#[derive(Debug, Deserialize, PartialEq, Clone)]
-pub struct Coef {
-    #[serde(rename = "@exponent1")]
-    pub exponent1: String,
-    #[serde(rename = "@exponent2", default)]
-    pub exponent2: Option<String>,
-    #[serde(rename = "$value")]
-    pub value: f64,
-}
-
-#[derive(Debug, Deserialize, PartialEq, Clone)]
 pub struct ProductPlane {
     #[serde(rename = "RowUnitVector")]
     pub row_unit_vector: Vector3,
     #[serde(rename = "ColUnitVector")]
     pub col_unit_vector: Vector3,
 }
-
-#[derive(Debug, Deserialize, PartialEq, Clone)]
-pub struct Vector3 {
-    #[serde(rename = "X")]
-    pub x: f64,
-    #[serde(rename = "Y")]
-    pub y: f64,
-    #[serde(rename = "Z")]
-    pub z: f64,
-}
-
-#[derive(Debug, Deserialize, PartialEq, Clone)]
-pub struct ArpPoly {
-    #[serde(rename = "X")]
-    pub x: PolyDim,
-    #[serde(rename = "Y")]
-    pub y: PolyDim,
-    #[serde(rename = "Z")]
-    pub z: PolyDim,
-}
-
-#[derive(Debug, Deserialize, PartialEq, Clone)]
-pub struct PolyDim {
-    #[serde(rename = "@order1")]
-    pub order1: String,
-    #[serde(rename = "Coef")]
-    pub coeffs: Vec<Coef>,
-}
-
 
 #[cfg(test)]
 mod tests {
