@@ -1,7 +1,6 @@
 ['Annotations',
  'DownstreamReprocessing',
  'ErrorStatistics',
- 'ExploitationFeatures',
  'GeographicAndTarget',
  'NITF',
  'ProductProcessing',
