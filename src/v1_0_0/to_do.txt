@@ -1,5 +1,4 @@
 ['Annotations',
- 'Display',
  'DownstreamReprocessing',
  'ErrorStatistics',
  'ExploitationFeatures',
