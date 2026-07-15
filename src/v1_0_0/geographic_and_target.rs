@@ -48,7 +48,7 @@ mod tests {
     use quick_xml::de::from_str;
 
     #[test]
-    fn test_display() {
+    fn test_geographic_and_target() {
         let xml_str = r#"
              <GeographicAndTargetType><GeographicCoverage>
              <Footprint size="4"><Vertex index="1">
