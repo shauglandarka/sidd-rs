@@ -1,9 +1,8 @@
 use clap::Parser;
-use ndarray::{s, ArrayView2};
-use sidd_rs::{read_sidd};
-use std::path::Path;
+use ndarray::{ArrayView2, s};
 use ndarray_npy::write_npy;
-
+use sidd_rs::read_sidd;
+use std::path::Path;
 
 /// Example of reading and working with a SIDD file
 #[derive(Parser)]
@@ -16,10 +15,9 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-
     let sidd = read_sidd(&args.input).unwrap();
     let meta = sidd.meta.get_v1_0_0_meta().unwrap();
-    println!("{:#?}", meta.product_creation);
+    println!("{:#?}", meta.exploitation_features);
     std::process::exit(0);
 
     let arr = sidd.image_data[0].array.slice(s![0..3, 0..3]);
@@ -29,11 +27,10 @@ fn main() {
     let img = &sidd.image_data[0].array;
     dbg!(&img.raw_dim());
 
-    if let Err(e) = save_as_npy(img.view(), &args.output){
+    if let Err(e) = save_as_npy(img.view(), &args.output) {
         eprintln!("Error saving npy: {}", e)
     }
 }
-
 
 pub fn save_as_npy<P: AsRef<Path>>(
     array: ArrayView2<u8>,
@@ -47,4 +44,3 @@ pub fn save_as_npy<P: AsRef<Path>>(
 
     Ok(())
 }
-

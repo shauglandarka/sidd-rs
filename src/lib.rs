@@ -6,14 +6,14 @@
 
 #![allow(unused_imports)]
 #![allow(non_camel_case_types)]
-use rayon::slice::ParallelSliceMut;
 use memmap2::Mmap;
-use ndarray::{azip, par_azip, Array2, ArrayView2, s, ArrayView4};
+use ndarray::{Array2, ArrayView2, ArrayView4, azip, par_azip, s};
 use quick_xml::DeError;
+use rayon::slice::ParallelSliceMut;
 use std::fs::File;
 use std::path::Path;
 use std::slice::from_raw_parts;
-use std::str::{from_utf8, FromStr, Utf8Error};
+use std::str::{FromStr, Utf8Error, from_utf8};
 use zerocopy::{BE, F32};
 
 use num_complex::{Complex, Complex32};
@@ -88,39 +88,36 @@ pub struct ImageData {
 
 impl ImageData {
     pub fn initialize(
-        mmap: Mmap, 
-        nbpr : usize,
-        nbpc : usize,
-        nppbh : usize,
-        nppbv : usize,
-        n_rows: usize, 
-        n_cols: usize
+        mmap: Mmap,
+        nbpr: usize,
+        nbpc: usize,
+        nppbh: usize,
+        nppbv: usize,
+        n_rows: usize,
+        n_cols: usize,
     ) -> Self {
-
-        // Image is stored in blocks, each block is row contiguous. 
+        // Image is stored in blocks, each block is row contiguous.
         // Each block is nppbv x nppbh  pixels.
         // There are nbpc blocks in the vertical
         // There are nbpl blocks in the horizontal
         // Map the flat bytes to the block structure
         let byte_slice = unsafe { std::slice::from_raw_parts(mmap.as_ptr(), mmap.len()) };
 
-        let blocks = ArrayView4::from_shape((nbpc, nbpr, nppbv, nppbh), byte_slice)
-            .expect("Shape mismatch");
+        let blocks =
+            ArrayView4::from_shape((nbpc, nbpr, nppbv, nppbh), byte_slice).expect("Shape mismatch");
 
         //Permute and collapse. First heap allocation
-        let stitched = blocks.permuted_axes([0, 2, 1, 3])
-                      .as_standard_layout()
-                      .into_owned()
-                      .into_shape((nbpc * nppbv, nbpr * nppbh))
-                      .expect("Failed to reshape into 2D array");
+        let stitched = blocks
+            .permuted_axes([0, 2, 1, 3])
+            .as_standard_layout()
+            .into_owned()
+            .into_shape((nbpc * nppbv, nbpr * nppbh))
+            .expect("Failed to reshape into 2D array");
 
         // Crop it: take a slice and turn it into an owned Array2. Second heap allocation
         let cropped = stitched.slice(s![..n_rows, ..n_cols]).to_owned();
 
-        Self { 
-           array: cropped, 
-        }
-
+        Self { array: cropped }
     }
 }
 
@@ -163,7 +160,7 @@ impl Sidd {
     pub fn from_file(mut file: File) -> Result<Self, SiddError> {
         let nitf = Nitf::from_reader(&mut file)?;
         if nitf.nitf_header.numdes.val == 0 {
-            return Err(SiddError::NotASidd)
+            return Err(SiddError::NotASidd);
         }
         let dex_data = nitf.data_extension_segments[0].get_data_map(&mut file)?;
         let sidd_str = from_utf8(&dex_data[..])?;
@@ -209,5 +206,3 @@ fn parse_sidd(sidd_str: &str) -> Result<(SiddVersion, SiddMeta), SiddError> {
         SiddVersion::V2_0_0 => Err(Unimpl("V2_0_0".to_string())),
     }
 }
-
-

@@ -55,8 +55,6 @@ pub enum DecimationMethodEnum {
     LAGRANGE,
 }
 
-
-
 #[cfg(test)]
 mod tests {
     use super::Display;
@@ -69,13 +67,12 @@ mod tests {
             <MagnificationMethod>NEAREST_NEIGHBOR</MagnificationMethod>
             <DecimationMethod>BRIGHTEST_PIXEL</DecimationMethod>
             </ProductDisplayType>"#;
-                
+
         match from_str::<Display>(&xml_str) {
             Ok(_) => {
                 println!("Successfully Deserialized!");
-            },
+            }
             Err(e) => panic!("Deserialization FAILED: {:#?}", e),
         }
-
     }
 }

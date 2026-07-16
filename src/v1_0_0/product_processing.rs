@@ -36,13 +36,12 @@ pub struct ModuleParameter {
 
 #[derive(Debug, Deserialize, PartialEq, Clone)]
 #[serde(untagged)] // Try different types until one fits
-pub enum ParamValue{
+pub enum ParamValue {
     Bool(bool),
     Int(i64),
     Float(f64),
     String(String),
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -121,13 +120,12 @@ mod tests {
             <ModuleName name="">DataRemapping</ModuleName>
             </ProcessingModule></ProcessingModule>
             </ProductProcessingType>"#;
-                                 
+
         match from_str::<ProductProcessing>(&xml_str) {
             Ok(_) => {
                 println!("Successfully Deserialized!");
-            },
+            }
             Err(e) => panic!("Deserialization FAILED: {:#?}", e),
         }
-
     }
 }

@@ -23,10 +23,10 @@ pub struct ProductCreation {
 #[derive(Debug, Deserialize, PartialEq, Clone)]
 pub struct ProductCreationExtension {
     // The @ symbol tells serde to look in the attributes, NOT a child tag
-    #[serde(rename = "@name")] 
+    #[serde(rename = "@name")]
     pub name: String,
     // The $value tells serde to take the text content inside the tag
-    #[serde(rename = "$value")] 
+    #[serde(rename = "$value")]
     pub value: String,
 }
 
@@ -107,7 +107,7 @@ mod tests {
             <ProductCreationExtension name="Runtime\Process\Project (sec)">0.015</ProductCreationExtension>
             <ProductCreationExtension name="Runtime\Process\Remap to ubyte (sec)">0.011</ProductCreationExtension>
             </ProductCreationType>"#;
-        
+
         match from_str::<ProductCreation>(&xml_str) {
             Ok(_) => println!("successfully deserialized!"),
             Err(e) => panic!("Deserialization FALIED: {:#?}", e),

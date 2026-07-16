@@ -1,7 +1,7 @@
+use super::{ArpPoly, Coef, Ecef, PolyDim, RowCol, TimeCoaPoly, Vector3};
 use serde::Deserialize;
-use super::{Vector3, ArpPoly, PolyDim, TimeCoaPoly, Coef, RowCol, Ecef};
 
-// SIDD Vol. 1 version 1.0, pg. 52 
+// SIDD Vol. 1 version 1.0, pg. 52
 #[derive(Debug, Deserialize, PartialEq, Clone)]
 #[serde(rename = "MeasurementType")]
 pub struct Measurement {
@@ -98,7 +98,7 @@ mod tests {
             <sicommon:Coef exponent1="4">1.417114461889858e-07</sicommon:Coef>
             <sicommon:Coef exponent1="5">-1.834143210486639e-08</sicommon:Coef>
             </sicommon:Z></ARPPoly></MeasurementType>"#;
-        
+
         match from_str::<Measurement>(&xml_str) {
             Ok(_) => println!("Successfully Deserialized!"),
             Err(e) => panic!("Deserialization FALIED: {:#?}", e),

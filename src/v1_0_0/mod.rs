@@ -1,18 +1,18 @@
 use serde::Deserialize;
 
+pub mod display;
 pub mod exploitation_features;
+pub mod geographic_and_target;
+pub mod measurement;
 pub mod product_creation;
 pub mod product_processing;
-pub mod measurement;
-pub mod display;
-pub mod geographic_and_target;
 
-pub use exploitation_features::ExploitationFeatures;
-pub use product_creation::ProductCreation;
-pub use geographic_and_target::GeographicAndTarget;
 pub use display::Display;
-pub use product_processing::ProductProcessing;
+pub use exploitation_features::ExploitationFeatures;
+pub use geographic_and_target::GeographicAndTarget;
 pub use measurement::Measurement;
+pub use product_creation::ProductCreation;
+pub use product_processing::ProductProcessing;
 
 // Haven't done these yet
 
@@ -56,7 +56,6 @@ pub struct SiddMeta {
     #[serde(rename = "Radiometric")]
     pub radiometric: Option<Radiometric>,
 }
-
 
 #[derive(Debug, Deserialize, PartialEq, Clone)]
 pub struct Vector3 {
@@ -146,4 +145,3 @@ pub struct RangeAzimuth {
     #[serde(rename = "Azimuth")]
     pub azimuth: f64,
 }
-

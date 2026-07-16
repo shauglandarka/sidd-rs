@@ -41,7 +41,6 @@ pub struct Vertex {
     pub lon: f64,
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::GeographicAndTarget;
@@ -65,13 +64,12 @@ mod tests {
              <sicommon:Lon>-58.407538882532251</sicommon:Lon>
              </Vertex></Footprint><GeographicInfo />
              </GeographicCoverage></GeographicAndTargetType>"#;
-                         
+
         match from_str::<GeographicAndTarget>(&xml_str) {
             Ok(_) => {
                 println!("Successfully Deserialized!");
-            },
+            }
             Err(e) => panic!("Deserialization FAILED: {:#?}", e),
         }
-
     }
 }
