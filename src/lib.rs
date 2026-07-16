@@ -8,7 +8,7 @@
 #![allow(non_camel_case_types)]
 use rayon::slice::ParallelSliceMut;
 use memmap2::Mmap;
-use ndarray::{azip, par_azip, Array2, ArrayView2};
+use ndarray::{azip, par_azip, Array2, ArrayView2, s, ArrayView4};
 use quick_xml::DeError;
 use std::fs::File;
 use std::path::Path;
@@ -42,7 +42,7 @@ pub mod v1_0_0;
 ///
 /// ```
 ///
-pub fn read_sidd(path: &Path) -> Result<Sidd<'_>, SiddError> {
+pub fn read_sidd(path: &Path) -> Result<Sidd, SiddError> {
     let file = File::open(path)?;
     Sidd::from_file(file)
 }
@@ -68,7 +68,7 @@ pub enum SiddError {
 
 /// SIDD file structure
 // TODO: Implement printing (Debug, Display?)
-pub struct Sidd<'a> {
+pub struct Sidd {
     /// Nitf file object and associated metadata
     pub nitf: Nitf,
     /// Parsed SIDD xml metadata
@@ -76,41 +76,51 @@ pub struct Sidd<'a> {
     /// SIDD Version
     pub version: SiddVersion,
     /// Image data from Nitf Image segements
-    pub image_data: Vec<ImageData<'a>>,
+    pub image_data: Vec<ImageData>,
 }
 
 #[derive(Debug)]
-pub struct ImageData<'a> {
+pub struct ImageData {
     /// SIDD uint8 raw byte array
-    pub array: ArrayView2<'a, u8>,
-    /// Need to hold onto this to access data
-    _mmap: Mmap,
+    /// Returning owned array, so no need for lifetimes
+    pub array: Array2<u8>,
 }
 
-impl<'a> ImageData<'a> {
-    fn initialize(mmap: Mmap, n_rows: usize, n_cols: usize) -> Self {
-        let byte_slice = unsafe { from_raw_parts(mmap.as_ptr(), mmap.len()) };
+impl ImageData {
+    pub fn initialize(
+        mmap: Mmap, 
+        nbpr : usize,
+        nbpc : usize,
+        nppbh : usize,
+        nppbv : usize,
+        n_rows: usize, 
+        n_cols: usize
+    ) -> Self {
 
-        let array = ArrayView2::from_shape((n_rows, n_cols), byte_slice).unwrap();
+        // Image is stored in blocks, each block is row contiguous. 
+        // Each block is nppbv x nppbh  pixels.
+        // There are nbpc blocks in the vertical
+        // There are nbpl blocks in the horizontal
+        // Map the flat bytes to the block structure
+        let byte_slice = unsafe { std::slice::from_raw_parts(mmap.as_ptr(), mmap.len()) };
 
-        Self { array, _mmap: mmap }
-    }
-}
+        let blocks = ArrayView4::from_shape((nbpc, nbpr, nppbv, nppbh), byte_slice)
+            .expect("Shape mismatch");
 
-pub trait ToNative {
-    /// Performs allocation of a native-aligned u8 array
-    fn to_native(&self) -> Array2<u8>;
-    /// Performs allocation of a native-aligned u8 array using `rayon`
-    fn par_to_native(&self) -> Array2<u8>;
-}
+        //Permute and collapse. First heap allocation
+        let stitched = blocks.permuted_axes([0, 2, 1, 3])
+                      .as_standard_layout()
+                      .into_owned()
+                      .into_shape((nbpc * nppbv, nbpr * nppbh))
+                      .expect("Failed to reshape into 2D array");
 
-impl<'a> ToNative for ArrayView2<'a, u8> {
-    fn to_native(&self) -> Array2<u8> {
-        self.to_owned()
-    }
+        // Crop it: take a slice and turn it into an owned Array2. Second heap allocation
+        let cropped = stitched.slice(s![..n_rows, ..n_cols]).to_owned();
 
-    fn par_to_native(&self) -> Array2<u8> {
-        self.to_owned()
+        Self { 
+           array: cropped, 
+        }
+
     }
 }
 
@@ -149,7 +159,7 @@ impl SiddMeta {
     }
 }
 
-impl<'a> Sidd<'a> {
+impl Sidd {
     pub fn from_file(mut file: File) -> Result<Self, SiddError> {
         let nitf = Nitf::from_reader(&mut file)?;
         if nitf.nitf_header.numdes.val == 0 {
@@ -159,12 +169,18 @@ impl<'a> Sidd<'a> {
         let sidd_str = from_utf8(&dex_data[..])?;
         let (version, meta) = parse_sidd(sidd_str)?;
 
+        let raw_data = nitf.image_segments[0].get_data_map(&mut file).unwrap();
+
         let image_data: Vec<_> = nitf
             .image_segments
             .iter()
             .map(|seg| {
                 ImageData::initialize(
                     seg.get_data_map(&mut file).unwrap(),
+                    seg.header.nbpr.val as usize,
+                    seg.header.nbpc.val as usize,
+                    seg.header.nppbh.val as usize,
+                    seg.header.nppbv.val as usize,
                     seg.header.nrows.val as usize,
                     seg.header.ncols.val as usize,
                 )
@@ -187,7 +203,6 @@ struct VersionGetter {
 }
 
 fn parse_sidd(sidd_str: &str) -> Result<(SiddVersion, SiddMeta), SiddError> {
-    // This feels bad
     let tmp: VersionGetter = from_str(sidd_str)?;
     let sidd_version = SiddVersion::from_str(&tmp.version)?;
     use SiddError::Unimpl;
