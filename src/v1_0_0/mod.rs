@@ -57,6 +57,7 @@ pub struct SiddMeta {
     pub radiometric: Option<Radiometric>,
 }
 
+
 #[derive(Debug, Deserialize, PartialEq, Clone)]
 pub struct Vector3 {
     #[serde(rename = "X")]
@@ -114,9 +115,9 @@ pub struct RowCol {
 
 #[derive(Debug, Deserialize, PartialEq, Clone)]
 pub struct RowColInt {
-    #[serde(rename = "sicommon:Row")]
+    #[serde(rename = "Row")]
     pub row: u32,
-    #[serde(rename = "sicommon:Col")]
+    #[serde(rename = "Col")]
     pub col: u32,
 }
 
@@ -132,9 +133,9 @@ pub struct Ecef {
 
 #[derive(Debug, Deserialize, PartialEq, Clone)]
 pub struct AngleMagnitude {
-    #[serde(rename = "sicommon:Angle")]
+    #[serde(rename = "Angle")]
     pub angle: f64,
-    #[serde(rename = "sicommon:Magnitude")]
+    #[serde(rename = "Magnitude")]
     pub magnitude: f64,
 }
 

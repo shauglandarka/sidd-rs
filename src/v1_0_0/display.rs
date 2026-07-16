@@ -6,11 +6,11 @@ use serde::Deserialize;
 #[serde(rename_all = "PascalCase")]
 pub struct Display {
     #[serde(rename = "PixelType")]
-    pixel_type: PixelType,
+    pub pixel_type: PixelType,
     #[serde(rename = "MagnificationMethod")]
-    magnification_method: Option<MagnificationMethod>,
+    pub magnification_method: Option<MagnificationMethod>,
     #[serde(rename = "DecimationMethod")]
-    decimation_method: Option<DecimationMethod>,
+    pub decimation_method: Option<DecimationMethod>,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Clone)]

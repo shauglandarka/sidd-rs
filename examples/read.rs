@@ -1,9 +1,8 @@
 use clap::Parser;
 use ndarray::{s, ArrayView2};
 use sidd_rs::{read_sidd};
-use std::{fs::File, io::BufWriter, path::Path};
+use std::path::Path;
 use ndarray_npy::write_npy;
-use nitf_rs::*;
 
 
 /// Example of reading and working with a SIDD file
@@ -20,7 +19,9 @@ fn main() {
 
     let sidd = read_sidd(&args.input).unwrap();
     let meta = sidd.meta.get_v1_0_0_meta().unwrap();
-    //println!("{:?}", meta.display);
+    println!("{:#?}", meta.product_creation);
+    std::process::exit(0);
+
     let arr = sidd.image_data[0].array.slice(s![0..3, 0..3]);
     arr.indexed_iter()
         .for_each(|((row, col), val)| println!("[{row}, {col}] = {}", val));

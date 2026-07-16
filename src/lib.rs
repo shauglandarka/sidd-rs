@@ -169,8 +169,6 @@ impl Sidd {
         let sidd_str = from_utf8(&dex_data[..])?;
         let (version, meta) = parse_sidd(sidd_str)?;
 
-        let raw_data = nitf.image_segments[0].get_data_map(&mut file).unwrap();
-
         let image_data: Vec<_> = nitf
             .image_segments
             .iter()
