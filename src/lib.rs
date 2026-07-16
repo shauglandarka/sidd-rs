@@ -9,7 +9,6 @@
 use memmap2::Mmap;
 use ndarray::{Array2, ArrayView2, ArrayView4, azip, par_azip, s};
 use quick_xml::DeError;
-use rayon::slice::ParallelSliceMut;
 use std::fs::File;
 use std::path::Path;
 use std::slice::from_raw_parts;
@@ -41,7 +40,6 @@ pub mod v1_0_0;
 /// let meta = sidd.meta.get_v1_0_0_meta();
 ///
 /// ```
-///
 pub fn read_sidd(path: &Path) -> Result<Sidd, SiddError> {
     let file = File::open(path)?;
     Sidd::from_file(file)

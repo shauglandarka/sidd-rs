@@ -16,9 +16,9 @@ fn main() {
     let args = Args::parse();
 
     let sidd = read_sidd(&args.input).unwrap();
-    let meta = sidd.meta.get_v1_0_0_meta().unwrap();
-    println!("{:#?}", meta.exploitation_features);
-    std::process::exit(0);
+//    let meta = sidd.meta.get_v1_0_0_meta().unwrap();
+//    println!("{:#?}", meta.exploitation_features);
+//    std::process::exit(0);
 
     let arr = sidd.image_data[0].array.slice(s![0..3, 0..3]);
     arr.indexed_iter()
@@ -27,9 +27,9 @@ fn main() {
     let img = &sidd.image_data[0].array;
     dbg!(&img.raw_dim());
 
-    if let Err(e) = save_as_npy(img.view(), &args.output) {
-        eprintln!("Error saving npy: {}", e)
-    }
+//    if let Err(e) = save_as_npy(img.view(), &args.output) {
+//        eprintln!("Error saving npy: {}", e)
+//    }
 }
 
 pub fn save_as_npy<P: AsRef<Path>>(
